@@ -2,8 +2,8 @@
 // @name         ComicK Downloader
 // @namespace    http://tampermonkey.net/
 // @version      1.1
-// @description  Download manga chapters from ComicK with a user-friendly interface, organized by language
-// @author       You
+// @description  Download manga chapters from ComicK with interface, organized by language
+// @author       Elzents
 // @match        https://comick.io*/*
 // @grant        none
 // @require      https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js
@@ -12,7 +12,7 @@
 (async () => {
     'use strict';
 
-    // 🖌️ 1. Create enhanced user interface
+    // user interface
     const ui = document.createElement('div');
     ui.style.position = 'fixed';
     ui.style.top = '20px';
@@ -159,13 +159,13 @@
     `;
     document.body.appendChild(ui);
 
-    // 🎛️ 2. Global variables
+    // Global variables
     let selectedManga = null;
     let allChapters = [];
     let selectedChapters = [];
     let filteredChapters = [];
 
-    // 🔍 3. Search manga
+    // Search manga
     const searchInput = document.getElementById('searchInput');
     const searchBtn = document.getElementById('searchBtn');
     const searchResults = document.getElementById('searchResults');
@@ -213,7 +213,7 @@
         }
     });
 
-    // 📚 4. Select manga
+    // Select manga
     searchResults.addEventListener('click', async e => {
         const target = e.target.closest('div[data-hid]');
         if (!target) return;
@@ -262,7 +262,7 @@
             return;
         }
 
-        // 🗣️ 5. Display available languages
+        // Display available languages
         const languages = [...new Set(allChapters.map(ch => ch.lang))].sort();
         const langCheckboxes = document.getElementById('langCheckboxes');
         langCheckboxes.innerHTML = languages
@@ -281,7 +281,7 @@
         document.getElementById('downloadSection').style.display = 'block';
     });
 
-    // 📋 6. Update chapter list
+    // Update chapter list
     function updateChapterList() {
         const selectedLangs = Array.from(document.querySelectorAll('#langCheckboxes input:checked')).map(
             input => input.value
@@ -290,7 +290,7 @@
             ? allChapters.filter(ch => selectedLangs.includes(ch.lang))
             : allChapters;
 
-        // Sort chapters by chapter number (ascending)
+        // Sort chapters by chapter number
         filteredChapters.sort((a, b) => {
             const chapA = parseFloat(a.chap || '0');
             const chapB = parseFloat(b.chap || '0');
@@ -318,7 +318,7 @@
         selectedChapters = [];
     }
 
-    // 🎚️ 7. Chapter selection and range selection
+    // Chapter selection and range selection
     document.getElementById('langCheckboxes').addEventListener('change', updateChapterList);
 
     document.getElementById('selectAllChapters').addEventListener('click', () => {
@@ -344,7 +344,7 @@
         });
     });
 
-    // 📄 8. Get chapter pages
+    // Get chapter pages
     async function getPagesFromChapter(chapterHID) {
         const url = `https://api.comick.io/chapter/${chapterHID}`;
         const res = await fetch(url, {
@@ -367,7 +367,7 @@
         }));
     }
 
-    // 🖼️ 9. Show chapter details modal
+    // Show chapter details
     document.getElementById('chapterList').addEventListener('click', async e => {
         const infoBtn = e.target.closest('.ck-info-btn');
         if (!infoBtn) return;
@@ -419,7 +419,7 @@
         });
     });
 
-    // 📦 10. Download with progress and concurrent fetching
+    // Download with progress and concurrent fetching
     document.getElementById('downloadBtn').addEventListener('click', async () => {
         const downloadStatus = document.getElementById('downloadStatus');
         const progressBar = document.getElementById('progressBar');
